@@ -1,7 +1,7 @@
-FROM alpine:3.17.2
+FROM alpine:3.17
 
 RUN apk add --no-cache \
-    pdns-recursor \
+    pdns-recursor=4.7.5-r0 \
     py3-pip \
     python3
 
