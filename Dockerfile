@@ -24,6 +24,7 @@ EXPOSE 53 53/udp
 
 COPY recursor.conf.tpl /
 COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
 
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 
