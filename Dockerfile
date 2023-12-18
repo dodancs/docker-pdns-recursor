@@ -1,18 +1,21 @@
-FROM alpine:3.17
+FROM alpine:3.19
 
 RUN apk add --no-cache \
-    pdns-recursor=4.7.5-r0 \
+    pdns-recursor=4.9.2-r0 \
     py3-pip \
     python3
 
-RUN pip3 install --no-cache-dir 'Jinja2<3.1' envtpl
+ENV PATH "/opt/venv/bin:$PATH"
+
+RUN python3 -m venv /opt/venv \
+    && pip3 install --no-cache-dir envtpl
 
 RUN mkdir -p /etc/pdns/api.d \
   && chown -R recursor: /etc/pdns/api.d \
   && mkdir -p /var/run/pdns-recursor \
   && chown -R recursor: /var/run/pdns-recursor
 
-ENV VERSION=4.7 \
+ENV VERSION=4.9 \
   PDNS_setuid=recursor \
   PDNS_setgid=recursor \
   PDNS_daemon=no
