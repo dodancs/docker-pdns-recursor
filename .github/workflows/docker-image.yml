@@ -13,25 +13,25 @@ jobs:
       - name: Checkout the source code
         uses: actions/checkout@v4
 
-      - name: Get current tag
+      - name: Get current full version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      - name: Get current tag
-        run: echo "RELEASE_VERSION_1=$(echo ${{ env.RELEASE_VERSION }} | cut '.' -f1)" >> $GITHUB_ENV
+      - name: Get current sub-version
+        run: echo "RELEASE_VERSION_2=${RELEASE_VERSION%.*}" >> $GITHUB_ENV
 
-      - name: Get current tag
-        run: echo "RELEASE_VERSION_2=$(echo ${{ env.RELEASE_VERSION }} | cut '.' -f1,2)" >> $GITHUB_ENV
+      - name: Get current main-version
+        run: echo "RELEASE_VERSION_1=${RELEASE_VERSION_2%.*}" >> $GITHUB_ENV
 
       - name: Build the Docker image
         run: |
-          docker build . --file Dockerfile --tag dodancs/pdns-recursor:${{ env.RELEASE_VERSION }}
-          docker tag dodancs/pdns-recursor:${{ env.RELEASE_VERSION }} dodancs/pdns-recursor:${{ env.RELEASE_VERSION_1 }}
-          docker tag dodancs/pdns-recursor:${{ env.RELEASE_VERSION }} dodancs/pdns-recursor:${{ env.RELEASE_VERSION_2 }}
-          docker tag dodancs/pdns-recursor:${{ env.RELEASE_VERSION }} dodancs/pdns-recursor:latest
-          docker tag dodancs/pdns-recursor:${{ env.RELEASE_VERSION }} ghcr.io/dodancs/docker-pdns-recursor:${{ env.RELEASE_VERSION }}
-          docker tag dodancs/pdns-recursor:${{ env.RELEASE_VERSION }} ghcr.io/dodancs/docker-pdns-recursor:${{ env.RELEASE_VERSION_1 }}
-          docker tag dodancs/pdns-recursor:${{ env.RELEASE_VERSION }} ghcr.io/dodancs/docker-pdns-recursor:${{ env.RELEASE_VERSION_2 }}
-          docker tag dodancs/pdns-recursor:${{ env.RELEASE_VERSION }} ghcr.io/dodancs/docker-pdns-recursor:latest
+          docker build . --file Dockerfile --tag dodancs/pdns-recursor:${RELEASE_VERSION#v}
+          docker tag dodancs/pdns-recursor:${RELEASE_VERSION#v} dodancs/pdns-recursor:${RELEASE_VERSION_2#v}
+          docker tag dodancs/pdns-recursor:${RELEASE_VERSION#v} dodancs/pdns-recursor:${RELEASE_VERSION_1#v}
+          docker tag dodancs/pdns-recursor:${RELEASE_VERSION#v} dodancs/pdns-recursor:latest
+          docker tag dodancs/pdns-recursor:${RELEASE_VERSION#v} ghcr.io/dodancs/docker-pdns-recursor:${RELEASE_VERSION#v}
+          docker tag dodancs/pdns-recursor:${RELEASE_VERSION#v} ghcr.io/dodancs/docker-pdns-recursor:${RELEASE_VERSION_2#v}
+          docker tag dodancs/pdns-recursor:${RELEASE_VERSION#v} ghcr.io/dodancs/docker-pdns-recursor:${RELEASE_VERSION_1#v}
+          docker tag dodancs/pdns-recursor:${RELEASE_VERSION#v} ghcr.io/dodancs/docker-pdns-recursor:latest
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -48,11 +48,12 @@ jobs:
 
       - name: Push the Docker images
         run: |
-          docker push dodancs/pdns-recursor:${{ env.RELEASE_VERSION }}
-          docker push dodancs/pdns-recursor:${{ env.RELEASE_VERSION_1 }}
-          docker push dodancs/pdns-recursor:${{ env.RELEASE_VERSION_2 }}
+          docker push dodancs/pdns-recursor:${RELEASE_VERSION#v}
+          docker push dodancs/pdns-recursor:${RELEASE_VERSION_2#v}
+          docker push dodancs/pdns-recursor:${RELEASE_VERSION_1#v}
           docker push dodancs/pdns-recursor:latest
-          docker push ghcr.io/dodancs/docker-pdns-recursor:${{ env.RELEASE_VERSION }}
-          docker push ghcr.io/dodancs/docker-pdns-recursor:${{ env.RELEASE_VERSION_1 }}
-          docker push ghcr.io/dodancs/docker-pdns-recursor:${{ env.RELEASE_VERSION_2 }}
+          docker push ghcr.io/dodancs/docker-pdns-recursor:${RELEASE_VERSION#v}
+          docker push ghcr.io/dodancs/docker-pdns-recursor:${RELEASE_VERSION_2#v}
+          docker push ghcr.io/dodancs/docker-pdns-recursor:${RELEASE_VERSION_1#v}
           docker push ghcr.io/dodancs/docker-pdns-recursor:latest
+
