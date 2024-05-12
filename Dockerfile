@@ -31,7 +31,7 @@ FROM alpine:edge
 COPY --from=build-stage --chown=root:root /dist/envtpl /usr/local/bin/
 
 RUN apk add --no-cache \
-    pdns-recursor=5.0.3-r0
+    pdns-recursor=5.0.4-r0
 
 RUN mkdir -p /etc/pdns/api.d \
   && chown -R recursor: /etc/pdns/api.d \
