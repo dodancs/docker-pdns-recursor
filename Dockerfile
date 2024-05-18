@@ -15,17 +15,17 @@ FROM alpine:edge
 COPY --from=build-stage --chown=root:root /dist/envtpl /usr/local/bin/
 
 RUN apk add --no-cache \
-    pdns-recursor=5.0.4-r0
+    pdns-recursor=5.0.5-r0
 
 RUN mkdir -p /etc/pdns/api.d \
-  && chown -R recursor: /etc/pdns/api.d \
-  && mkdir -p /var/run/pdns-recursor \
-  && chown -R recursor: /var/run/pdns-recursor
+    && chown -R recursor: /etc/pdns/api.d \
+    && mkdir -p /var/run/pdns-recursor \
+    && chown -R recursor: /var/run/pdns-recursor
 
 ENV VERSION=5.0 \
-  PDNS_setuid=recursor \
-  PDNS_setgid=recursor \
-  PDNS_daemon=no
+    PDNS_setuid=recursor \
+    PDNS_setgid=recursor \
+    PDNS_daemon=no
 
 EXPOSE 53 53/udp
 
