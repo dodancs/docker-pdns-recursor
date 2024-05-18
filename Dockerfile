@@ -25,7 +25,10 @@ RUN mkdir -p /etc/pdns/api.d \
 ENV VERSION=5.0 \
     PDNS_setuid=recursor \
     PDNS_setgid=recursor \
-    PDNS_daemon=no
+    PDNS_daemon=no \
+    PDNS_local_port=53 \
+    PDNS_local_address=0.0.0.0 \
+    PDNS_allow_from=0.0.0.0/0
 
 EXPOSE 53 53/udp
 
